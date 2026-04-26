@@ -135,15 +135,20 @@ function tone(freq, type = "sine", level = 0.05, duration = 0.2) {
   const ctx = getCtx();
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
+
   osc.type = type;
   osc.frequency.value = freq;
+
   gain.gain.setValueAtTime(0.0001, ctx.currentTime);
   gain.gain.exponentialRampToValueAtTime(level, ctx.currentTime + 0.03);
   gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+
   osc.connect(gain);
   gain.connect(ctx.destination);
+
   osc.start();
   osc.stop(ctx.currentTime + duration + 0.02);
+
   add(osc);
   add(gain);
 }
@@ -151,6 +156,7 @@ function tone(freq, type = "sine", level = 0.05, duration = 0.2) {
 function drone(freqs, level = 0.06, type = "sine") {
   const ctx = getCtx();
   const master = ctx.createGain();
+
   master.gain.value = level;
   master.connect(ctx.destination);
   add(master);
@@ -158,12 +164,16 @@ function drone(freqs, level = 0.06, type = "sine") {
   freqs.forEach((freq, index) => {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
+
     osc.type = index % 2 ? "triangle" : type;
     osc.frequency.value = freq;
     gain.gain.value = index === 0 ? 0.5 : 0.18;
+
     osc.connect(gain);
     gain.connect(master);
+
     osc.start();
+
     add(osc);
     add(gain);
   });
@@ -174,9 +184,12 @@ function playProtocolSound(key) {
 
   if (key === "breakbeats") {
     let step = 0;
+
     activeTimers.push(setInterval(() => {
       step++;
+
       tone(step % 4 === 0 ? 90 : 145, "sine", 0.13, 0.08);
+
       if (step % 3 === 0) tone(427, "triangle", 0.035, 0.06);
       if (step % 5 === 0) tone(1280, "square", 0.025, 0.035);
       if (step % 7 === 0) tone(724, "sawtooth", 0.02, 0.04);
@@ -186,26 +199,41 @@ function playProtocolSound(key) {
   if (key === "hyperpop") {
     activeTimers.push(setInterval(() => {
       const scale = [427, 640, 724, 854, 1280, 1448];
-      tone(scale[Math.floor(Math.random() * scale.length)], Math.random() > 0.5 ? "square" : "sawtooth", 0.04, 0.075);
+      const freq = scale[Math.floor(Math.random() * scale.length)];
+      const type = Math.random() > 0.5 ? "square" : "sawtooth";
+
+      tone(freq, type, 0.04, 0.075);
     }, 105));
   }
 
   if (key === "synthpop") {
     drone([427, 540, 640.5, 724], 0.065);
+
     activeTimers.push(setInterval(() => {
       const melody = [427, 480, 540, 640.5];
-      tone(melody[Math.floor(Math.random() * melody.length)], "triangle", 0.035, 0.35);
+      const freq = melody[Math.floor(Math.random() * melody.length)];
+
+      tone(freq, "triangle", 0.035, 0.35);
     }, 520));
   }
 
   if (key === "driftphonk") {
     drone([53.375, 106.75, 427], 0.08);
-    activeTimers.push(setInterval(() => tone(80, "sine", 0.12, 0.12), 420));
+
+    activeTimers.push(setInterval(() => {
+      tone(80, "sine", 0.12, 0.12);
+    }, 420));
   }
 
   if (key === "darkwave") {
     drone([106.75, 213.5, 427], 0.055, "sawtooth");
-    activeTimers.push(setInterval(() => tone([106.75, 213.5, 320][Math.floor(Math.random() * 3)], "sawtooth", 0.035, 0.55), 820));
+
+    activeTimers.push(setInterval(() => {
+      const tones = [106.75, 213.5, 320];
+      const freq = tones[Math.floor(Math.random() * tones.length)];
+
+      tone(freq, "sawtooth", 0.035, 0.55);
+    }, 820));
   }
 
   if (key === "ambient") {
@@ -262,6 +290,7 @@ function updateBars(hrv, eda, motion) {
   if (hrvBar) hrvBar.style.width = hrv + "%";
   if (edaBar) edaBar.style.width = eda + "%";
   if (motionBar) motionBar.style.width = motion + "%";
+
   if (hrvValue) hrvValue.textContent = hrv + "%";
   if (edaValue) edaValue.textContent = eda + "%";
   if (motionValue) motionValue.textContent = motion + "%";
@@ -270,6 +299,7 @@ function updateBars(hrv, eda, motion) {
 function simulateInput() {
   const keys = Object.keys(stateRoutes);
   const state = stateRoutes[keys[Math.floor(Math.random() * keys.length)]];
+
   const hrv = Math.floor(25 + Math.random() * 70);
   const eda = Math.floor(18 + Math.random() * 78);
   const motion = Math.floor(15 + Math.random() * 82);
@@ -292,12 +322,15 @@ function simulateInput() {
 function inferFromInteraction() {
   const now = performance.now();
   const delta = now - lastMouseTime;
+
   lastMouseTime = now;
+
   movementPulse = Math.max(0, Math.min(100, movementPulse + (delta < 80 ? 8 : -3)));
 
   const hrv = Math.max(20, Math.min(95, Math.floor(50 + Math.sin(now / 900) * 18 + movementPulse * 0.18)));
   const eda = Math.max(15, Math.min(96, Math.floor(35 + movementPulse * 0.55)));
   const motion = Math.max(10, Math.min(98, Math.floor(movementPulse)));
+
   updateBars(hrv, eda, motion);
 
   if (!running) return;
@@ -309,6 +342,7 @@ function inferFromInteraction() {
 
 function setMode(mode) {
   currentRoute = mode;
+
   const label = mode === "stallion" ? "Stallion · 724Hz" : "Mellow · 427Hz";
   const modeLabel = document.getElementById("modeLabel");
   const orbText = document.getElementById("orbText");
@@ -332,7 +366,9 @@ function updateRouteHighlight(key) {
   };
 
   document.querySelectorAll(".route span").forEach(span => {
-    if (span.textContent.trim() === names[key]) span.classList.add("active-step");
+    if (span.textContent.trim() === names[key]) {
+      span.classList.add("active-step");
+    }
   });
 }
 
@@ -341,10 +377,12 @@ function playAnchor(freq, kind) {
 
   if (kind === "724") {
     drone([724, 1448, 181, 1086], 0.05, "triangle");
+
     const orbText = document.getElementById("orbText");
     if (orbText) orbText.textContent = "724Hz";
   } else {
     drone([427, 213.5, 106.75], 0.065);
+
     const orbText = document.getElementById("orbText");
     if (orbText) orbText.textContent = "427Hz";
   }
@@ -357,12 +395,14 @@ function draw() {
   const ctx = canvas.getContext("2d");
   const rect = canvas.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
+
   canvas.width = rect.width * dpr;
   canvas.height = rect.height * dpr;
 
   const w = canvas.width;
   const h = canvas.height;
   const t = performance.now() / 1000;
+
   ctx.clearRect(0, 0, w, h);
 
   const colorMap = {
@@ -391,6 +431,7 @@ function draw() {
       else amp = Math.sign(Math.sin(nx * 34 + t * 6)) * h * 0.045 + Math.sin(nx * 9 + t) * h * 0.04;
 
       const y = h * (0.5 + (layer - 1.5) * 0.11) + amp;
+
       if (x === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     }
