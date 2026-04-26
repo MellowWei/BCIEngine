@@ -3,7 +3,6 @@
 :root {
   --bg: #040615;
   --panel: rgba(255,255,255,.055);
-  --panel2: rgba(0,245,255,.06);
   --cyan: #00f5ff;
   --green: #35ff9f;
   --pink: #ff2bd6;
@@ -37,12 +36,7 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 3px,
-    rgba(255,255,255,.025) 4px
-  );
+  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,.025) 4px);
   z-index: 999;
 }
 
@@ -69,6 +63,8 @@ body::before {
   letter-spacing: .16em;
   font-size: 13px;
   white-space: nowrap;
+  color: var(--text);
+  text-decoration: none;
 }
 
 .pulse-dot {
@@ -139,19 +135,16 @@ h2 {
   letter-spacing: -.045em;
 }
 
-h3 {
-  margin: 10px 0;
-  font-size: 24px;
-}
+h3 { margin: 10px 0; font-size: 24px; }
 
-.lead, .sub, .cn, p {
+.lead, .sub, .cn, p, .section-lead {
   color: var(--muted);
   line-height: 1.75;
 }
 
 .cn { color: #9fb3c8; }
 
-.hero-actions {
+.hero-actions, .inline-actions, .route-controls {
   margin-top: 28px;
   display: flex;
   flex-wrap: wrap;
@@ -167,21 +160,40 @@ button {
   border-radius: 999px;
   cursor: pointer;
   letter-spacing: .09em;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
 }
 
 button:hover {
+  transform: translateY(-2px);
   border-color: var(--cyan);
   box-shadow: 0 0 22px rgba(0,245,255,.18);
 }
 
-.primary {
-  border-color: rgba(53,255,159,.55);
-  color: var(--green);
+.primary { border-color: rgba(53,255,159,.55); color: var(--green); }
+.secondary { border-color: rgba(0,245,255,.32); color: var(--cyan); }
+.danger { border-color: rgba(255,43,214,.40); color: var(--pink); }
+
+.status-strip {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
 }
 
-.secondary {
-  border-color: rgba(0,245,255,.32);
-  color: var(--cyan);
+.status-strip div, .state-note {
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 18px;
+  background: rgba(255,255,255,.035);
+  padding: 12px;
+}
+
+.status-strip span, .state-note span {
+  display: block;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  margin-bottom: 4px;
 }
 
 .signal-panel {
@@ -228,16 +240,16 @@ button:hover {
   text-shadow: 0 0 14px rgba(0,245,255,.9);
 }
 
-.section {
-  border-top: 1px solid rgba(255,255,255,.06);
-}
+.section { border-top: 1px solid rgba(255,255,255,.06); }
 
-.engine-grid, .protocol-grid {
+.engine-grid, .protocol-grid, .calibration-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
   margin-top: 26px;
 }
+
+.calibration-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
 .glass-card, .detail-card, .state-output, .sensor-stack {
   border: 1px solid var(--line);
@@ -267,19 +279,9 @@ button:hover {
   box-shadow: 0 0 32px rgba(53,255,159,.15);
 }
 
-.protocol span {
-  color: var(--pink);
-  font-family: var(--mono);
-}
-
-.protocol strong {
-  font-size: 20px;
-}
-
-.protocol em {
-  color: var(--muted);
-  font-style: normal;
-}
+.protocol span { color: var(--pink); font-family: var(--mono); }
+.protocol strong { font-size: 20px; }
+.protocol em { color: var(--muted); font-style: normal; }
 
 .detail-card {
   margin-top: 18px;
@@ -315,9 +317,7 @@ button:hover {
   margin-top: 24px;
 }
 
-.sensor {
-  margin-bottom: 18px;
-}
+.sensor { margin-bottom: 18px; }
 
 .sensor span {
   display: block;
@@ -366,11 +366,13 @@ button:hover {
   font-size: 12px;
 }
 
-.stallion-title { color: var(--pink); }
-
-.stallion span {
-  border-color: rgba(255,43,214,.32);
+.route span.active-step {
+  border-color: var(--green);
+  box-shadow: 0 0 18px rgba(53,255,159,.18);
 }
+
+.stallion-title { color: var(--pink); }
+.stallion span { border-color: rgba(255,43,214,.32); }
 
 footer {
   padding: 36px 6vw;
@@ -419,7 +421,11 @@ footer {
 
   .nav a { font-size: 10px; }
 
-  .engine-grid, .protocol-grid {
+  .engine-grid, .protocol-grid, .calibration-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .status-strip {
     grid-template-columns: 1fr;
   }
 
