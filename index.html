@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Human Return Engine · Music-Driven Neural Rhythm Interface</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <span class="pulse-dot"></span>
+      <span>HUMAN RETURN ENGINE</span>
+    </div>
+    <nav class="nav">
+      <a href="#home">HOME</a>
+      <a href="#engine">ENGINE</a>
+      <a href="#protocols">PROTOCOLS</a>
+      <a href="#loop">CLOSED LOOP</a>
+      <a href="#session">SESSION</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">MELLOW WEI · HRP / BCI EXTENSION</p>
+        <h1>Human Return Engine</h1>
+        <h2>一个由原创音乐驱动的神经节律接口</h2>
+        <p class="lead">
+          Attention is not a resource to be managed. Human life is not a machine to be optimized.
+          Rhythm is the interface through which people return to themselves.
+        </p>
+        <p class="lead cn">
+          注意力不是待管理资源。人类生命不是待优化机器。节律是人返回自身的接口。
+        </p>
+        <div class="hero-actions">
+          <button id="startEngine" class="primary">START ENGINE / 启动</button>
+          <button id="stopEngine" class="secondary">STOP / 停止</button>
+        </div>
+      </div>
+
+      <div class="signal-panel">
+        <div class="orb" id="mainOrb">
+          <span id="orbText">427Hz</span>
+        </div>
+        <canvas id="heroCanvas"></canvas>
+      </div>
+    </section>
+
+    <section id="engine" class="section">
+      <p class="eyebrow">ENGINE ARCHITECTURE</p>
+      <h2>State → Music → Rhythm Return</h2>
+      <div class="engine-grid">
+        <article class="glass-card">
+          <span class="num">01</span>
+          <h3>State Input</h3>
+          <p>Simulated neural cuff input: HRV variance, skin conductance, motion rhythm, and interaction tempo.</p>
+          <p class="cn">模拟神经袖环输入：HRV 波动、皮肤电、运动节律与交互速度。</p>
+        </article>
+        <article class="glass-card">
+          <span class="num">02</span>
+          <h3>QDR Engine</h3>
+          <p>Qualia-driven rhythm interpretation. Pain is treated as signal, not noise.</p>
+          <p class="cn">感质驱动节律解释。痛苦被视为信号，而不是噪音。</p>
+        </article>
+        <article class="glass-card">
+          <span class="num">03</span>
+          <h3>Music Intervention</h3>
+          <p>Wei Jueran’s original music genres become neural intervention protocols.</p>
+          <p class="cn">魏珏然的原创音乐类型成为神经干预协议。</p>
+        </article>
+        <article class="glass-card">
+          <span class="num">04</span>
+          <h3>Return Signal</h3>
+          <p>The system re-anchors body, time, emotion, cognition, meaning, and perception.</p>
+          <p class="cn">系统重新锚定身体、时间、情绪、认知、意义与感知。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="protocols" class="section">
+      <p class="eyebrow">MUSIC PROTOCOL MATRIX</p>
+      <h2>Six Genre Therapy</h2>
+      <div class="protocol-grid">
+        <button class="protocol active" data-protocol="breakbeats">
+          <span>01</span>
+          <strong>Breakbeats</strong>
+          <em>Entry Protocol / 入口</em>
+        </button>
+        <button class="protocol" data-protocol="hyperpop">
+          <span>02</span>
+          <strong>Hyperpop</strong>
+          <em>Peak Traversal / 峰值</em>
+        </button>
+        <button class="protocol" data-protocol="synthpop">
+          <span>03</span>
+          <strong>Synthpop</strong>
+          <em>First Breath / 呼吸</em>
+        </button>
+        <button class="protocol" data-protocol="driftphonk">
+          <span>04</span>
+          <strong>Drift Phonk</strong>
+          <em>Temporal Re-entry / 回返</em>
+        </button>
+        <button class="protocol" data-protocol="darkwave">
+          <span>05</span>
+          <strong>Darkwave</strong>
+          <em>Shadow Integration / 阴影</em>
+        </button>
+        <button class="protocol" data-protocol="ambient">
+          <span>06</span>
+          <strong>Ambient Techno</strong>
+          <em>Homecoming / 回家</em>
+        </button>
+      </div>
+
+      <div class="detail-card">
+        <div>
+          <p class="eyebrow" id="protocolStage">ENTRY PROTOCOL</p>
+          <h3 id="protocolTitle">Breakbeats</h3>
+          <p id="protocolDesc">
+            Irregularity becomes safe. Breakbeats train uncertainty tolerance and anti-dissociation anchoring.
+          </p>
+          <p id="protocolDescCN" class="cn">
+            不规则变得安全。Breakbeats 训练不确定性承受与反解离锚定。
+          </p>
+        </div>
+        <div class="metrics">
+          <div><span>BPM</span><strong id="metricBpm">150–170</strong></div>
+          <div><span>Target</span><strong id="metricTarget">Amygdala · DMN</strong></div>
+          <div><span>Exit</span><strong id="metricExit">Flexible activation</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="loop" class="section">
+      <p class="eyebrow">CLOSED LOOP SIMULATION</p>
+      <h2>Fake Neural Cuff → Real Music Behavior</h2>
+
+      <div class="loop-layout">
+        <div class="sensor-stack">
+          <div class="sensor">
+            <span>HRV Variance</span>
+            <div class="bar"><i id="hrvBar"></i></div>
+            <strong id="hrvValue">62%</strong>
+          </div>
+          <div class="sensor">
+            <span>Skin Conductance</span>
+            <div class="bar"><i id="edaBar"></i></div>
+            <strong id="edaValue">48%</strong>
+          </div>
+          <div class="sensor">
+            <span>Motion Rhythm</span>
+            <div class="bar"><i id="motionBar"></i></div>
+            <strong id="motionValue">37%</strong>
+          </div>
+        </div>
+
+        <div class="state-output">
+          <p class="eyebrow">CURRENT STATE</p>
+          <h3 id="stateName">Overloaded</h3>
+          <p id="stateMeaning">Too much signal is entering. The body needs rhythm, not command.</p>
+          <p id="stateMeaningCN" class="cn">太多信号正在进入。身体需要节律，而不是命令。</p>
+          <button id="simulateOnce" class="secondary">SIMULATE INPUT / 模拟输入</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="session" class="section">
+      <p class="eyebrow">SESSION ROUTE</p>
+      <h2>Mellow Protocol</h2>
+      <div class="route">
+        <span>Breakbeats</span>
+        <span>Hyperpop</span>
+        <span>Synthpop</span>
+        <span>Drift Phonk</span>
+        <span>Darkwave</span>
+        <span>Ambient Techno</span>
+        <span>427Hz</span>
+      </div>
+
+      <h2 class="stallion-title">Stallion Protocol · 724Hz</h2>
+      <div class="route stallion">
+        <span>Ambient Techno</span>
+        <span>Darkwave</span>
+        <span>Drift Phonk</span>
+        <span>Breakbeats</span>
+        <span>Synthpop</span>
+        <span>Hyperpop</span>
+        <span>724Hz</span>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Human Return Engine · Music as Neural Rhythm Interface · 427Hz / 724Hz</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
