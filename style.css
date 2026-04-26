@@ -440,3 +440,29 @@ footer {
 /* FINAL FIX: make controls reliably clickable */
 button, .protocol { position: relative; z-index: 10; }
 .signal-panel canvas { pointer-events: none; }
+
+
+/* HARD FIX: protocol cards must receive clicks */
+.protocol-grid {
+  position: relative;
+  z-index: 50;
+  pointer-events: auto !important;
+}
+
+.protocol {
+  position: relative;
+  z-index: 60;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  user-select: none;
+}
+
+.protocol * {
+  pointer-events: none;
+}
+
+#heroCanvas,
+.signal-panel canvas,
+body::before {
+  pointer-events: none !important;
+}
