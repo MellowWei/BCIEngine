@@ -3,28 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Human Return Engine · Music-Driven Neural Rhythm Interface</title>
+  <title>Human Return Engine · HRP BCI</title>
+  <meta name="description" content="Human Return Engine: a music-driven neural rhythm interface by Mellow Wei." />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="site-header">
-    <div class="brand">
+    <a class="brand" href="#home" aria-label="Human Return Engine home">
       <span class="pulse-dot"></span>
       <span>HUMAN RETURN ENGINE</span>
-    </div>
-    <nav class="nav">
+    </a>
+    <nav class="nav" aria-label="Primary navigation">
       <a href="#home">HOME</a>
       <a href="#engine">ENGINE</a>
       <a href="#protocols">PROTOCOLS</a>
       <a href="#loop">CLOSED LOOP</a>
       <a href="#session">SESSION</a>
+      <a href="#calibration">CALIBRATION</a>
     </nav>
   </header>
 
   <main>
     <section id="home" class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">MELLOW WEI · HRP / BCI EXTENSION</p>
+        <p class="eyebrow">MELLOW WEI · HRP / BCI ENGINE</p>
         <h1>Human Return Engine</h1>
         <h2>一个由原创音乐驱动的神经节律接口</h2>
         <p class="lead">
@@ -34,13 +36,21 @@
         <p class="lead cn">
           注意力不是待管理资源。人类生命不是待优化机器。节律是人返回自身的接口。
         </p>
-        <div class="hero-actions">
+
+        <div class="hero-actions" role="group" aria-label="Engine controls">
           <button id="startEngine" class="primary">START ENGINE / 启动</button>
-          <button id="stopEngine" class="secondary">STOP / 停止</button>
+          <button id="simulateOnce" class="secondary">SIMULATE CUFF / 模拟袖环</button>
+          <button id="stopEngine" class="danger">STOP / 停止</button>
+        </div>
+
+        <div class="status-strip" aria-live="polite">
+          <div><span>MODE</span><strong id="modeLabel">Mellow · 427Hz</strong></div>
+          <div><span>STATE</span><strong id="miniState">Overloaded</strong></div>
+          <div><span>ACTIVE</span><strong id="miniProtocol">Breakbeats</strong></div>
         </div>
       </div>
 
-      <div class="signal-panel">
+      <div class="signal-panel" aria-label="Live rhythm visualization">
         <div class="orb" id="mainOrb">
           <span id="orbText">427Hz</span>
         </div>
@@ -51,12 +61,19 @@
     <section id="engine" class="section">
       <p class="eyebrow">ENGINE ARCHITECTURE</p>
       <h2>State → Music → Rhythm Return</h2>
+      <p class="section-lead">
+        The engine converts simulated 44271 Neural Cuff signals into music-driven intervention routes.
+      </p>
+      <p class="section-lead cn">
+        引擎将模拟的 44271 Neural Cuff 信号转译为音乐驱动的干预路径。
+      </p>
+
       <div class="engine-grid">
         <article class="glass-card">
           <span class="num">01</span>
           <h3>State Input</h3>
-          <p>Simulated neural cuff input: HRV variance, skin conductance, motion rhythm, and interaction tempo.</p>
-          <p class="cn">模拟神经袖环输入：HRV 波动、皮肤电、运动节律与交互速度。</p>
+          <p>HRV variance, skin conductance, motion rhythm, and interaction tempo.</p>
+          <p class="cn">HRV 波动、皮肤电、运动节律与交互速度。</p>
         </article>
         <article class="glass-card">
           <span class="num">02</span>
@@ -82,36 +99,31 @@
     <section id="protocols" class="section">
       <p class="eyebrow">MUSIC PROTOCOL MATRIX</p>
       <h2>Six Genre Therapy</h2>
-      <div class="protocol-grid">
-        <button class="protocol active" data-protocol="breakbeats">
-          <span>01</span>
-          <strong>Breakbeats</strong>
-          <em>Entry Protocol / 入口</em>
+      <p class="section-lead">
+        Genre is not style here. Genre is intervention logic.
+      </p>
+      <p class="section-lead cn">
+        在这里，类型不是风格。类型就是干预逻辑。
+      </p>
+
+      <div class="protocol-grid" role="tablist" aria-label="Music protocols">
+        <button class="protocol active" data-protocol="breakbeats" role="tab">
+          <span>01</span><strong>Breakbeats</strong><em>Entry Protocol / 入口</em>
         </button>
-        <button class="protocol" data-protocol="hyperpop">
-          <span>02</span>
-          <strong>Hyperpop</strong>
-          <em>Peak Traversal / 峰值</em>
+        <button class="protocol" data-protocol="hyperpop" role="tab">
+          <span>02</span><strong>Hyperpop</strong><em>Peak Traversal / 峰值</em>
         </button>
-        <button class="protocol" data-protocol="synthpop">
-          <span>03</span>
-          <strong>Synthpop</strong>
-          <em>First Breath / 呼吸</em>
+        <button class="protocol" data-protocol="synthpop" role="tab">
+          <span>03</span><strong>Synthpop</strong><em>First Breath / 呼吸</em>
         </button>
-        <button class="protocol" data-protocol="driftphonk">
-          <span>04</span>
-          <strong>Drift Phonk</strong>
-          <em>Temporal Re-entry / 回返</em>
+        <button class="protocol" data-protocol="driftphonk" role="tab">
+          <span>04</span><strong>Drift Phonk</strong><em>Temporal Re-entry / 回返</em>
         </button>
-        <button class="protocol" data-protocol="darkwave">
-          <span>05</span>
-          <strong>Darkwave</strong>
-          <em>Shadow Integration / 阴影</em>
+        <button class="protocol" data-protocol="darkwave" role="tab">
+          <span>05</span><strong>Darkwave</strong><em>Shadow Integration / 阴影</em>
         </button>
-        <button class="protocol" data-protocol="ambient">
-          <span>06</span>
-          <strong>Ambient Techno</strong>
-          <em>Homecoming / 回家</em>
+        <button class="protocol" data-protocol="ambient" role="tab">
+          <span>06</span><strong>Ambient Techno</strong><em>Homecoming / 回家</em>
         </button>
       </div>
 
@@ -125,6 +137,10 @@
           <p id="protocolDescCN" class="cn">
             不规则变得安全。Breakbeats 训练不确定性承受与反解离锚定。
           </p>
+          <div class="inline-actions">
+            <button id="playProtocol" class="primary">PLAY CURRENT / 播放当前</button>
+            <button id="stopProtocol" class="secondary">STOP AUDIO / 停止音频</button>
+          </div>
         </div>
         <div class="metrics">
           <div><span>BPM</span><strong id="metricBpm">150–170</strong></div>
@@ -137,6 +153,12 @@
     <section id="loop" class="section">
       <p class="eyebrow">CLOSED LOOP SIMULATION</p>
       <h2>Fake Neural Cuff → Real Music Behavior</h2>
+      <p class="section-lead">
+        Move your mouse, scroll, or click simulate. The engine treats interaction rhythm as proxy sensor data.
+      </p>
+      <p class="section-lead cn">
+        移动鼠标、滚动页面，或点击模拟。系统会把交互节律作为替代传感器数据。
+      </p>
 
       <div class="loop-layout">
         <div class="sensor-stack">
@@ -162,33 +184,49 @@
           <h3 id="stateName">Overloaded</h3>
           <p id="stateMeaning">Too much signal is entering. The body needs rhythm, not command.</p>
           <p id="stateMeaningCN" class="cn">太多信号正在进入。身体需要节律，而不是命令。</p>
-          <button id="simulateOnce" class="secondary">SIMULATE INPUT / 模拟输入</button>
+
+          <div class="state-note">
+            <span>QDR OUTPUT</span>
+            <strong id="qdrOutput">Deploy Breakbeats. Train irregularity as safe.</strong>
+          </div>
         </div>
       </div>
     </section>
 
     <section id="session" class="section">
       <p class="eyebrow">SESSION ROUTE</p>
-      <h2>Mellow Protocol</h2>
-      <div class="route">
-        <span>Breakbeats</span>
-        <span>Hyperpop</span>
-        <span>Synthpop</span>
-        <span>Drift Phonk</span>
-        <span>Darkwave</span>
-        <span>Ambient Techno</span>
-        <span>427Hz</span>
+      <h2>Mellow Protocol · 427Hz</h2>
+      <div class="route" id="mellowRoute">
+        <span>Breakbeats</span><span>Hyperpop</span><span>Synthpop</span><span>Drift Phonk</span><span>Darkwave</span><span>Ambient Techno</span><span>427Hz</span>
       </div>
 
       <h2 class="stallion-title">Stallion Protocol · 724Hz</h2>
-      <div class="route stallion">
-        <span>Ambient Techno</span>
-        <span>Darkwave</span>
-        <span>Drift Phonk</span>
-        <span>Breakbeats</span>
-        <span>Synthpop</span>
-        <span>Hyperpop</span>
-        <span>724Hz</span>
+      <div class="route stallion" id="stallionRoute">
+        <span>Ambient Techno</span><span>Darkwave</span><span>Drift Phonk</span><span>Breakbeats</span><span>Synthpop</span><span>Hyperpop</span><span>724Hz</span>
+      </div>
+
+      <div class="route-controls">
+        <button id="mellowMode" class="primary">MELLOW ROUTE / 427Hz</button>
+        <button id="stallionMode" class="secondary">STALLION ROUTE / 724Hz</button>
+      </div>
+    </section>
+
+    <section id="calibration" class="section">
+      <p class="eyebrow">CALIBRATION</p>
+      <h2>Anchor Frequencies</h2>
+      <div class="calibration-grid">
+        <article class="glass-card">
+          <h3>427Hz · Mellow</h3>
+          <p>Warm return coordinate. Used when the system needs embodied return and coherence.</p>
+          <p class="cn">温暖返回坐标。用于身体返回与一致性恢复。</p>
+          <button id="play427" class="primary">PLAY 427Hz</button>
+        </article>
+        <article class="glass-card">
+          <h3>724Hz · Stallion</h3>
+          <p>Bright stabilization coordinate. Used when the system needs safety-first sealing.</p>
+          <p class="cn">明亮稳定坐标。用于安全优先的封存与稳定。</p>
+          <button id="play724" class="secondary">PLAY 724Hz</button>
+        </article>
       </div>
     </section>
   </main>
