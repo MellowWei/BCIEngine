@@ -1,139 +1,272 @@
-/* FINAL JS — ALL INTERACTIONS + SOUND FIXED */
+/* HUMAN RETURN ENGINE — FINAL HARD FIX */
 
-const protocols = {
-  breakbeats: { stage:"ENTRY",title:"Breakbeats",desc:"Irregularity becomes safe.",descCN:"不规则变得安全",bpm:"150–170",target:"Amygdala",exit:"Flexible",qdr:"Breakbeats entry" },
-  hyperpop: { stage:"PEAK",title:"Hyperpop",desc:"Peak traversal.",descCN:"峰值穿越",bpm:"160–190",target:"Dopamine",exit:"Plateau",qdr:"Peak then release" },
-  synthpop: { stage:"BREATH",title:"Synthpop",desc:"Structure becomes kind.",descCN:"结构变温柔",bpm:"95–125",target:"Narrative",exit:"Stable",qdr:"Gift rhythm" },
-  driftphonk: { stage:"RE-ENTRY",title:"Drift Phonk",desc:"Return to now.",descCN:"回到当下",bpm:"80–110",target:"Timeline",exit:"Coherence",qdr:"Return body" },
-  darkwave: { stage:"SHADOW",title:"Darkwave",desc:"Go down safely.",descCN:"安全下潜",bpm:"70–105",target:"Depth",exit:"Baseline",qdr:"Integrate shadow" },
-  ambient: { stage:"HOME",title:"Ambient",desc:"Completion.",descCN:"完成",bpm:"60–90",target:"Rest",exit:"Coherent",qdr:"Consolidate" }
-};
+let audioCtx = null;
+let master = null;
+let nodes = [];
+let timers = [];
+let running = false;
+let currentProtocol = "breakbeats";
+let currentRoute = "mellow";
 
-let audioCtx, masterGain;
-let timers=[], nodes=[];
-let running=false, current="breakbeats", mode="mellow";
+const protocols = ["breakbeats", "hyperpop", "synthpop", "driftphonk", "darkwave", "ambient"];
+
+function $(id){ return document.getElementById(id); }
+
+function forceClickable(){
+  document.querySelectorAll("button,.protocol,.hero-actions,.protocol-grid,.calibration-grid").forEach(el=>{
+    el.style.pointerEvents = "auto";
+    el.style.position = "relative";
+    el.style.zIndex = "9999";
+  });
+  document.querySelectorAll("canvas,#heroCanvas").forEach(el=>{
+    el.style.pointerEvents = "none";
+  });
+}
 
 function ctx(){
-  if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-  if(audioCtx.state==="suspended") audioCtx.resume();
-  if(!masterGain){
-    masterGain=audioCtx.createGain();
-    masterGain.gain.value=0.6;
-    masterGain.connect(audioCtx.destination);
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    master = audioCtx.createGain();
+    master.gain.value = 0.7;
+    master.connect(audioCtx.destination);
   }
+  if(audioCtx.state === "suspended") audioCtx.resume();
+  return audioCtx;
 }
 
 function stopAll(){
-  timers.forEach(clearInterval); timers=[];
-  nodes.forEach(n=>{try{n.stop&&n.stop()}catch{}});
-  nodes=[];
+  timers.forEach(clearInterval);
+  timers = [];
+  nodes.forEach(n=>{
+    try{ n.stop && n.stop(); }catch(e){}
+    try{ n.disconnect && n.disconnect(); }catch(e){}
+  });
+  nodes = [];
 }
 
-function tone(f,type="sine",g=0.05,d=0.2){
+function tone(freq, type="sine", gain=0.08, dur=0.2){
   ctx();
-  let o=audioCtx.createOscillator(), a=audioCtx.createGain();
-  o.type=type; o.frequency.value=f;
-  a.gain.setValueAtTime(0.0001,audioCtx.currentTime);
-  a.gain.exponentialRampToValueAtTime(g,audioCtx.currentTime+0.02);
-  a.gain.exponentialRampToValueAtTime(0.0001,audioCtx.currentTime+d);
-  o.connect(a); a.connect(masterGain);
-  o.start(); o.stop(audioCtx.currentTime+d+0.03);
-  nodes.push(o,a);
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+
+  osc.type = type;
+  osc.frequency.value = freq;
+
+  g.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(gain, audioCtx.currentTime + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+
+  osc.connect(g);
+  g.connect(master);
+
+  osc.start();
+  osc.stop(audioCtx.currentTime + dur + 0.03);
+
+  nodes.push(osc,g);
 }
 
-function drone(freqs){
+function drone(freqs, gain=0.06, type="sine"){
   ctx();
-  freqs.forEach(f=>{
-    let o=audioCtx.createOscillator(), g=audioCtx.createGain();
-    o.frequency.value=f; g.gain.value=0.05;
-    o.connect(g); g.connect(masterGain);
-    o.start(); nodes.push(o,g);
+  freqs.forEach((f,i)=>{
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+
+    osc.type = i % 2 ? "triangle" : type;
+    osc.frequency.value = f;
+    g.gain.value = gain;
+
+    osc.connect(g);
+    g.connect(master);
+
+    osc.start();
+    nodes.push(osc,g);
   });
 }
 
-function play(key){
+function playProtocol(key){
   stopAll();
-  if(key==="breakbeats"){
-    let s=0;
+  currentProtocol = key;
+  setUI(key);
+
+  if(key === "breakbeats"){
+    let s = 0;
     timers.push(setInterval(()=>{
       s++;
-      tone(s%4?140:90,"sine",0.12,0.08);
-      if(s%3===0) tone(427,"triangle",0.03,0.05);
-    },140));
+      tone(s % 4 === 0 ? 90 : 145, "sine", 0.14, 0.08);
+      if(s % 3 === 0) tone(427, "triangle", 0.04, 0.06);
+      if(s % 5 === 0) tone(1280, "square", 0.03, 0.04);
+    },145));
   }
-  if(key==="hyperpop"){
-    timers.push(setInterval(()=>{
-      let arr=[427,724,1280];
-      tone(arr[Math.random()*3|0],"square",0.04,0.07);
-    },100));
-  }
-  if(key==="synthpop"){
-    drone([427,540,640]);
-    timers.push(setInterval(()=>tone(540,"triangle",0.03,0.3),500));
-  }
-  if(key==="driftphonk"){
-    drone([106,427]);
-    timers.push(setInterval(()=>tone(80,"sine",0.12,0.1),400));
-  }
-  if(key==="darkwave"){
-    drone([106,213,427]);
-  }
-  if(key==="ambient"){
-    drone([mode==="stallion"?724:427]);
-  }
-}
 
-function setProtocol(k){
-  current=k;
-  document.querySelectorAll(".protocol").forEach(el=>{
-    el.classList.toggle("active",el.dataset.protocol===k);
-  });
-  if(running) play(k);
+  if(key === "hyperpop"){
+    timers.push(setInterval(()=>{
+      const arr = [427,640,724,854,1280,1448];
+      tone(arr[Math.floor(Math.random()*arr.length)], "square", 0.05, 0.07);
+    },105));
+  }
+
+  if(key === "synthpop"){
+    drone([427,540,640,724],0.045,"triangle");
+    timers.push(setInterval(()=>{
+      const arr = [427,480,540,640];
+      tone(arr[Math.floor(Math.random()*arr.length)],"triangle",0.04,0.35);
+    },520));
+  }
+
+  if(key === "driftphonk"){
+    drone([53.375,106.75,427],0.075,"sine");
+    timers.push(setInterval(()=>{
+      tone(80,"sine",0.12,0.12);
+    },420));
+  }
+
+  if(key === "darkwave"){
+    drone([106.75,213.5,320,427],0.045,"sawtooth");
+    timers.push(setInterval(()=>{
+      tone(106.75,"sawtooth",0.04,0.55);
+    },820));
+  }
+
+  if(key === "ambient"){
+    drone([106.75,213.5,currentRoute === "stallion" ? 724 : 427],0.055,"sine");
+  }
 }
 
 function playAnchor(type){
   stopAll();
-  if(type==="724"){
-    drone([724,1448]);
-    tone(724,"triangle",0.05,0.5);
-  }else{
-    drone([427,213]);
-    tone(106,"sine",0.05,0.5);
+
+  if(type === "724"){
+    drone([724,1448,1086,181],0.055,"triangle");
+    timers.push(setInterval(()=>{
+      tone(724,"triangle",0.035,0.09);
+    },360));
+    if($("orbText")) $("orbText").innerText = "724Hz";
+  } else {
+    drone([427,213.5,106.75],0.075,"sine");
+    timers.push(setInterval(()=>{
+      tone(106.75,"sine",0.035,0.18);
+    },900));
+    if($("orbText")) $("orbText").innerText = "427Hz";
   }
 }
 
-function bind(){
-  document.querySelector(".protocol-grid").addEventListener("click",e=>{
-    let el=e.target.closest(".protocol");
-    if(!el) return;
-    ctx();
-    setProtocol(el.dataset.protocol);
-    play(el.dataset.protocol);
+function setUI(key){
+  document.querySelectorAll(".protocol").forEach(el=>{
+    el.classList.toggle("active", el.dataset.protocol === key);
   });
 
-  document.getElementById("startEngine").onclick=()=>{
-    ctx(); running=true; play(current);
+  const titleMap = {
+    breakbeats:"Breakbeats",
+    hyperpop:"Hyperpop",
+    synthpop:"Synthpop",
+    driftphonk:"Drift Phonk",
+    darkwave:"Darkwave",
+    ambient:"Ambient Techno"
   };
 
-  document.getElementById("stopEngine").onclick=()=>{
-    running=false; stopAll();
-  };
+  if($("protocolTitle")) $("protocolTitle").innerText = titleMap[key];
+  if($("miniProtocol")) $("miniProtocol").innerText = titleMap[key];
+  if($("orbText")) $("orbText").innerText = titleMap[key].toUpperCase();
 
-  document.getElementById("simulateOnce").onclick=()=>{
-    ctx();
-    let keys=Object.keys(protocols);
-    let k=keys[Math.random()*keys.length|0];
-    setProtocol(k); play(k);
-  };
-
-  document.getElementById("play427").onclick=()=>{ctx(); playAnchor("427")};
-  document.getElementById("play724").onclick=()=>{ctx(); playAnchor("724")};
-
-  document.getElementById("mellowMode").onclick=()=>mode="mellow";
-  document.getElementById("stallionMode").onclick=()=>mode="stallion";
+  document.querySelectorAll(".route span").forEach(s=>{
+    s.classList.toggle("active-step", s.innerText.trim() === titleMap[key]);
+  });
 }
 
-document.addEventListener("DOMContentLoaded",()=>{
-  bind();
-  setProtocol("breakbeats");
-});
+function simulate(){
+  const next = protocols[Math.floor(Math.random()*protocols.length)];
+  playProtocol(next);
+
+  if($("stateName")) $("stateName").innerText = "Simulated → " + next;
+  if($("miniState")) $("miniState").innerText = next;
+}
+
+function bindHard(){
+  forceClickable();
+
+  document.addEventListener("pointerdown", e=>{
+    const protocol = e.target.closest(".protocol");
+    if(protocol && protocol.dataset.protocol){
+      e.preventDefault();
+      ctx();
+      playProtocol(protocol.dataset.protocol);
+      return;
+    }
+
+    if(e.target.closest("#startEngine")){
+      e.preventDefault();
+      ctx();
+      running = true;
+      playProtocol(currentProtocol);
+      return;
+    }
+
+    if(e.target.closest("#simulateOnce")){
+      e.preventDefault();
+      ctx();
+      simulate();
+      return;
+    }
+
+    if(e.target.closest("#stopEngine")){
+      e.preventDefault();
+      running = false;
+      stopAll();
+      return;
+    }
+
+    if(e.target.closest("#play427")){
+      e.preventDefault();
+      ctx();
+      playAnchor("427");
+      return;
+    }
+
+    if(e.target.closest("#play724")){
+      e.preventDefault();
+      ctx();
+      playAnchor("724");
+      return;
+    }
+
+    if(e.target.closest("#mellowMode")){
+      e.preventDefault();
+      currentRoute = "mellow";
+      if($("modeLabel")) $("modeLabel").innerText = "Mellow · 427Hz";
+      tone(427,"sine",0.04,0.2);
+      return;
+    }
+
+    if(e.target.closest("#stallionMode")){
+      e.preventDefault();
+      currentRoute = "stallion";
+      if($("modeLabel")) $("modeLabel").innerText = "Stallion · 724Hz";
+      tone(724,"triangle",0.04,0.2);
+      return;
+    }
+
+    if(e.target.closest("#playProtocol")){
+      e.preventDefault();
+      ctx();
+      playProtocol(currentProtocol);
+      return;
+    }
+
+    if(e.target.closest("#stopProtocol")){
+      e.preventDefault();
+      stopAll();
+      return;
+    }
+  }, true);
+}
+
+function init(){
+  bindHard();
+  setUI("breakbeats");
+}
+
+if(document.readyState === "loading"){
+  document.addEventListener("DOMContentLoaded", init);
+}else{
+  init();
+}
